@@ -1,0 +1,11 @@
+title: Proxmox Mail Gateway: Statistics
+agents: linux
+catalog: os/services
+author: Chris Pedro (chris@thepedros.com)
+license: MIT License
+distribution: check_mk
+description:
+ This check monitors various statistics on a Proxmox Mail Gateway system.
+
+inventory:
+ Mail statistics are found automatically, parsed from JSON output.

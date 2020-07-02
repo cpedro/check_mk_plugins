@@ -1,0 +1,10 @@
+title: Proxmox Virtual Environment: QEMU VMs
+agents: linux
+catalog: os/services
+license: MIT License
+distribution: check_mk
+description:
+ Monitors QEMU VMs running on Proxmox Virtual Environment
+
+inventory:
+ One service per QEMU VM is created.

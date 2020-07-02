@@ -1,0 +1,88 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+# Monitor Proxmox QEMU VMs
+# Author: Chris Pedro
+# Date: 2020-07-01
+
+# Original code: https://pve.proxmox.com/wiki/Nagios_check_mk
+
+# Example output from agent:
+# <<<pve_qemu>>>
+# 101 VM1 running 2503 6.7 1.1
+# 102 VM2 running 1498 6.7 0.4
+
+
+factory_settings['pve_qemu_default_levels'] = {
+    'cpu': (80, 90),
+    'memory': (80, 90),
+}
+
+
+def inventory_qemu(info):
+    inventory = []
+    for line in info:
+        # only VM's running while inventory are monitored.
+        if line[2] == 'running':
+            vm = line[1]
+        inventory.append((vm, None))
+    return inventory
+
+
+def check_qemu(item, params, info):
+    for line in info:
+        if item == line[1]:
+            state = 0
+            perfdata = []
+
+            vmid = line[0]
+            vm = line[1]
+            status = line[2]
+
+            info = 'VM {}, ID: {} - {}'.format(vm, vmid, status)
+
+            if status == 'running' and len(line) == 6:
+                cpu_warn, cpu_crit = params['cpu']
+                mem_warn, mem_crit = params['memory']
+
+                assigned_mem = int(line[3]) * 1048576
+                current_cpu = float(line[4])
+                current_mem = float(line[5])
+
+                info += ' - CPU: {:1.1%}, Memory: {:1.1%}'.format(
+                    current_cpu / 100, current_mem / 100)
+
+                perfdata.extend([
+                    ('cpu', current_cpu, cpu_warn, cpu_crit),
+                    ('memory_current', current_mem, mem_warn, mem_crit),
+                    ('memory_assigned', assigned_mem),
+                ])
+
+                if cpu_crit is not None and current_cpu > cpu_crit:
+                    state = 2
+                    info += ' (warn/crit at {}/{})'.format(cpu_warn, cpu_crit)
+                elif cpu_warn is not None and current_cpu > cpu_warn:
+                    state = 1
+                    info += ' (warn/crit at {}/{})'.format(cpu_warn, cpu_crit)
+
+                if mem_crit is not None and current_mem > mem_crit:
+                    state = 2
+                    info += ' (warn/crit at {}/{})'.format(mem_warn, mem_crit)
+                elif mem_warn is not None and current_mem > mem_warn:
+                    state = 1
+                    info += ' (warn/crit at {}/{})'.format(mem_warn, mem_crit)
+            else:
+                state = 2
+
+            yield state, info, perfdata
+
+
+check_info['pve_qemu'] = {
+    'inventory_function': inventory_qemu,
+    'check_function': check_qemu,
+    'service_description': 'VM %s',
+    'group': 'pve_qemu',
+    'default_levels_variable': 'pve_qemu_default_levels',
+    'has_perfdata': True,
+}
+

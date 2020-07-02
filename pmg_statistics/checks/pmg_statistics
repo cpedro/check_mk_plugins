@@ -1,0 +1,100 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+# Monitor Proxmox Mail Gateway Statistics
+# Author: Chris Pedro
+# Date: 2020-06-25
+
+# Example agent plugin output:
+# <<<pmg_statistics>>>
+# [[[mail]]]
+# {
+#     "avptime" : 7.20763455904447,
+#     "bounces_in" : 0,
+#     "bounces_out" : 0,
+#     "bytes_in" : 2926844,
+#     "bytes_out" : 0,
+#     "count" : 61,
+#     "count_in" : 61,
+#     "count_out" : 0,
+#     "glcount" : 0,
+#     "junk_in" : 24,
+#     "junk_out" : 0,
+#     "pregreet_rejects" : 9,
+#     "rbl_rejects" : 0,
+#     "spamcount_in" : 15,
+#     "spamcount_out" : 0,
+#     "spfcount" : 0,
+#     "viruscount_in" : 0,
+#     "viruscount_out" : 0
+# }
+
+
+import json
+
+
+factory_settings['pmg_stats_default_levels'] = {
+    'avptime': (10, 20),
+}
+
+
+def parse_pmg_stats(info):
+    parsed = {}
+    stats_name = ''
+    stats = ''
+    for line in info:
+        if line[0].startswith('[[[') and line[0].endswith(']]]'):
+            stats_name = line[0][3:-3]
+        else:
+            stats += ' '.join(line)
+
+    if stats:
+        parsed.setdefault(stats_name, [])
+        parsed[stats_name].append(json.loads(stats))
+
+    return parsed
+
+
+def inventory_pmg_stats(parsed):
+    for stats in parsed:
+        yield stats, {}
+
+
+def check_pmg_stats(item, params, parsed):
+    if item is None:
+        item = ''
+
+    if item not in parsed:
+        yield 3, 'Item {} not found.'.format(item)
+
+    for stats in parsed[item]:
+        if item in ['mail'] and 'avptime' in params:
+            warn, crit = params['avptime']
+            avptime = stats['avptime']
+            perfdata = [('avptime', avptime, warn, crit)]
+
+            state = 0
+            info = 'Avg. Mail Process Time: {:.2f}s'.format(avptime)
+
+            if crit is not None and avptime >= crit:
+                state = 2
+                info += ' (warn/crit at {}/{})'.format(warn, crit)
+            elif warn is not None and avptime >= warn:
+                state = 1
+                info += ' (warn/crit at {}/{})'.format(warn, crit)
+
+            perfdata.extend((k, stats[k]) for k in stats if k != 'avptime')
+
+            yield state, info, perfdata
+
+
+check_info['pmg_statistics'] = {
+    'parse_function': parse_pmg_stats,
+    'inventory_function': inventory_pmg_stats,
+    'check_function': check_pmg_stats,
+    'service_description': 'PMG /statistics/%s',
+    'group': 'pmg_statistics',
+    'default_levels_variable': 'pmg_stats_default_levels',
+    'has_perfdata': True,
+}
+
