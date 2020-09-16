@@ -25,7 +25,7 @@ def inventory_qemu(info):
         # only VM's running while inventory are monitored.
         if line[2] == 'running':
             vm = line[1]
-        inventory.append((vm, None))
+            inventory.append((vm, None))
     return inventory
 
 
