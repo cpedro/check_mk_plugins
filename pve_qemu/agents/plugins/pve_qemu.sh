@@ -12,7 +12,7 @@ if which qm >/dev/null ; then
     if [[ ! -z $line ]]; then
       id=$(echo $line | awk '{print $1}')
       xname=$(echo $line | awk '{$1=$NF=$(NF-1)=$(NF-2)=$(NF-3)="";print $0}')
-      name=`echo $xname | sed 's/ /_/g'`
+      name=$(echo $xname | sed 's/ /_/g')
       state=$(echo $line | awk '{print $(NF-3)}')
       amem=$(echo $line | awk '{print $(NF-2)}')
       pid=$(echo $line | awk '{print $NF}')
