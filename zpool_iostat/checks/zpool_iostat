@@ -1,0 +1,93 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+# Monitor ZFS zpool iostat
+# Author: Chris Pedro
+# Date: 2024-02-27
+
+# Example output from agent:
+# <<<zpool_iostat>>>
+# tank 133596401971200 327253588889600 0 11 0 1612 0 9804 0 9830 0 800 0 0 0 0
+
+
+factory_settings['zpool_iostat_default_levels'] = {
+    'zpool_read_wait': (0.01, 0.05),
+    'zpool_write_wait': (0.01, 0.05),
+}
+
+
+def inventory_zpool_iostat(info):
+    inventory = []
+    for line in info:
+        pool = line[0]
+        inventory.append((pool, None))
+    return inventory
+
+
+def convert_to_subsecond(value):
+    units = [('ms', 1e-3), ('µs', 1e-6), ('ns', 1e-9)]
+    for unit, conversion in units:
+        if value >= conversion:
+            return f'{int(value / conversion)} {unit}'
+    # Default to nanoseconds if smaller than a nanosecond
+    return f'{int(value / 1e-9)} ns'
+
+
+def check_zpool_iostat(item, params, info):
+    for line in info:
+        if item == line[0]:
+            state = 0
+            perfdata = []
+
+            read_wait_warn, read_wait_crit = params['zpool_read_wait']
+            write_wait_warn, write_wait_crit = params['zpool_write_wait']
+
+            pool = line[0]
+            read_iops = int(line[3])
+            write_iops = int(line[4])
+            read_bw = int(line[5])
+            write_bw = int(line[6])
+            # Convert from ns to seconds.
+            read_wait = float(line[7]) / 1e9
+            write_wait = float(line[8]) / 1e9
+
+            detail = (
+                f'{pool} - Read IOPS: {read_iops}, Write IOPS: {write_iops}, '
+                f'Read Latency = {convert_to_subsecond(read_wait)}, '
+                f'Write Latency = {convert_to_subsecond(write_wait)}')
+
+            perfdata.extend([
+                ('zpool_read_iops', read_iops),
+                ('zpool_write_iops', write_iops),
+                ('zpool_read_bw', read_bw),
+                ('zpool_write_bw', write_bw),
+                ('zpool_read_wait', read_wait, read_wait_warn, read_wait_crit),
+                ('zpool_write_wait', write_wait, write_wait_warn,
+                    write_wait_crit),
+            ])
+
+            if read_wait_crit is not None and read_wait > read_wait_crit:
+                state = 2
+                info += f' (warn/crit at {read_wait_warn}/{read_wait_crit})'
+            elif write_wait_crit is not None and write_wait > write_wait_crit:
+                state = 2
+                info += f' (warn/crit at {write_wait_warn}/{write_wait_crit})'
+            elif read_wait_warn is not None and read_wait > read_wait_warn:
+                state = 1
+                info += f' (warn/crit at {read_wait_warn}/{read_wait_crit})'
+            elif write_wait_warn is not None and write_wait > write_wait_warn:
+                state = 1
+                info += f' (warn/crit at {write_wait_warn}/{write_wait_crit})'
+
+            yield state, detail, perfdata
+
+
+check_info['zpool_iostat'] = {
+    'inventory_function': inventory_zpool_iostat,
+    'check_function': check_zpool_iostat,
+    'service_description': 'ZFS pool %s iostat',
+    'group': 'zpool_iostat',
+    'default_levels_variable': 'zpool_iostat_default_levels',
+    'has_perfdata': True,
+}
+

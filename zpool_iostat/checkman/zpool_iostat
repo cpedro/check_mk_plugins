@@ -1,0 +1,10 @@
+title: ZFS Zpool iostat 
+agents: linux
+catalog: os/services
+license: MIT License
+distribution: check_mk
+description:
+ Monitors the zpool iostats, including IOPS, bandwidth and latency
+
+inventory:
+ One service per pool is created
