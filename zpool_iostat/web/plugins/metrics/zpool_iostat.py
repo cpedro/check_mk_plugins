@@ -113,14 +113,16 @@ perfometer_info.append({
     "type": "dual",
     "perfometers": [
         {
-            "type": "linear",
-            "segments": ["zpool_read_wait"],
-            "total": 0.01,
+            "type": "logarithmic",
+            "metric": "zpool_read_wait",
+            "half_value": 0.01,
+            "exponent": 10.0,
         },
         {
-            "type": "linear",
-            "segments": ["zpool_write_wait"],
-            "total": 0.01,
+            "type": "logarithmic",
+            "metric": "zpool_write_wait",
+            "half_value": 0.01,
+            "exponent": 10.0,
         }
     ],
 })
