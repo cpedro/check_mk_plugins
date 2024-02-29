@@ -13,7 +13,7 @@
 # 102 VM2 running 1498 6.7 0.4
 
 
-factory_settings['pve_qemu_default_levels'] = {
+factory_settings['pve_qemu_default_levels'] = {  # noqa: F821
     'cpu': (80, 90),
     'memory': (80, 90),
 }
@@ -77,7 +77,7 @@ def check_qemu(item, params, info):
             yield state, info, perfdata
 
 
-check_info['pve_qemu'] = {
+check_info['pve_qemu'] = {  # noqa: F821
     'inventory_function': inventory_qemu,
     'check_function': check_qemu,
     'service_description': 'VM %s',

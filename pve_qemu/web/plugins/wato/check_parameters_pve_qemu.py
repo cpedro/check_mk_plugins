@@ -20,7 +20,7 @@ from cmk.gui.plugins.wato import (
 )
 
 
-def _parameter_valuespec_pmg_avptime():
+def _parameter_valuespec_pve_avptime():
     return Dictionary(
         elements=[
             (
@@ -56,7 +56,7 @@ rulespec_registry.register(
         group=RulespecGroupCheckParametersApplications,
         is_deprecated=False,
         match_type='dict',
-        parameter_valuespec=_parameter_valuespec_pmg_avptime,
+        parameter_valuespec=_parameter_valuespec_pve_avptime,
         title=lambda: _('Proxmox Virtual Environmnet - QEMU VM status'),
     )
 )

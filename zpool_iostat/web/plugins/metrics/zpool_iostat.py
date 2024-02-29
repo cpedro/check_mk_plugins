@@ -19,7 +19,7 @@
 #   |  metrics                                                             |
 #   '----------------------------------------------------------------------'
 
-check_metrics['check_mk-zpool_iostat'] = {
+check_metrics['check_mk-zpool_iostat'] = {  # noqa: F821
     'zpool_read_iops': {'name': 'zpool_read_iops', },
     'zpool_write_iops': {'name': 'zpool_write_iops', },
     'zpool_read_wait': {'name': 'zpool_read_wait', },
@@ -61,38 +61,38 @@ check_metrics['check_mk-zpool_iostat'] = {
 # 52  brown 1
 # 53  brown 2
 
-metric_info['zpool_read_iops'] = {
-    'title': _('Read IOPS'),
+metric_info['zpool_read_iops'] = {  # noqa: F821
+    'title': _('Read IOPS'),  # noqa: F821
     'unit': '1/s',
     'color': '11/a',
 }
 
-metric_info['zpool_write_iops'] = {
-    'title': _('Write IOPS'),
+metric_info['zpool_write_iops'] = {  # noqa: F821
+    'title': _('Write IOPS'),  # noqa: F821
     'unit': '1/s',
     'color': '13/a',
 }
 
-metric_info['zpool_read_wait'] = {
-    'title': _('Read Latency'),
+metric_info['zpool_read_wait'] = {  # noqa: F821
+    'title': _('Read Latency'),  # noqa: F821
     'unit': 's',
     'color': '31/a',
 }
 
-metric_info['zpool_write_wait'] = {
-    'title': _('Write Latency'),
+metric_info['zpool_write_wait'] = {  # noqa: F821
+    'title': _('Write Latency'),  # noqa: F821
     'unit': 's',
     'color': '33/a',
 }
 
-metric_info['zpool_read_bw'] = {
-    'title': _('Read Bandwidth'),
+metric_info['zpool_read_bw'] = {  # noqa: F821
+    'title': _('Read Bandwidth'),  # noqa: F821
     'unit': 'bytes/s',
     'color': '#00e060',
 }
 
-metric_info['zpool_write_bw'] = {
-    'title': _('Write Bandwidth'),
+metric_info['zpool_write_bw'] = {  # noqa: F821
+    'title': _('Write Bandwidth'),  # noqa: F821
     'unit': 'bytes/s',
     'color': '#0080e0',
 }
@@ -109,7 +109,7 @@ metric_info['zpool_write_bw'] = {
 #   |  Definition of Perf-O-Meters                                         |
 #   '----------------------------------------------------------------------'
 
-perfometer_info.append({
+perfometer_info.append({  # noqa: F821
     "type": "dual",
     "perfometers": [
         {
@@ -139,16 +139,16 @@ perfometer_info.append({
 #   |  Definitions of time series graphs                                   |
 #   '----------------------------------------------------------------------'
 
-graph_info['zpool_iops'] = {
-    'title': _('IOPS'),
+graph_info['zpool_iops'] = {  # noqa: F821
+    'title': _('IOPS'),  # noqa: F821
     'metrics': [
         ('zpool_read_iops', 'area'),
         ('zpool_write_iops', '-area'),
     ],
 }
 
-graph_info['zpool_latency'] = {
-    'title': _('Latency'),
+graph_info['zpool_latency'] = {  # noqa: F821
+    'title': _('Latency'),  # noqa: F821
     'metrics': [
         ('zpool_read_wait', 'area'),
         ('zpool_write_wait', '-area'),
@@ -159,8 +159,8 @@ graph_info['zpool_latency'] = {
     ],
 }
 
-graph_info['zpool_bw'] = {
-    'title': _('Bandwidth'),
+graph_info['zpool_bw'] = {  # noqa: F821
+    'title': _('Bandwidth'),  # noqa: F821
     'metrics': [
         ('zpool_read_bw', 'area'),
         ('zpool_write_bw', '-area'),

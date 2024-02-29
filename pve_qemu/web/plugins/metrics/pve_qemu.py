@@ -19,7 +19,7 @@
 #   |  metrics                                                             |
 #   '----------------------------------------------------------------------'
 
-check_metrics['check_mk-pve_qemu'] = {
+check_metrics['check_mk-pve_qemu'] = {  # noqa: F821
     'cpu': {'name': 'pve_cpu', },
     'memory_current': {'name': 'pve_memory_current', },
     'memory_assigned': {'name': 'pve_memory_assigned', },
@@ -58,20 +58,20 @@ check_metrics['check_mk-pve_qemu'] = {
 # 52  brown 1
 # 53  brown 2
 
-metric_info['pve_cpu'] = {
-    'title': _('CPU Usage'),
+metric_info['pve_cpu'] = {  # noqa: F821
+    'title': _('CPU Usage'),  # noqa: F821
     'unit': '%',
     'color': '41/a',
 }
 
-metric_info['pve_memory_current'] = {
-    'title': _('Memory Usage'),
+metric_info['pve_memory_current'] = {  # noqa: F821
+    'title': _('Memory Usage'),  # noqa: F821
     'unit': '%',
     'color': '33/a',
 }
 
-metric_info['pve_memory_assigned'] = {
-    'title': _('Assigned Memory'),
+metric_info['pve_memory_assigned'] = {  # noqa: F821
+    'title': _('Assigned Memory'),  # noqa: F821
     'unit': 'bytes',
     'color': '31/a',
 }
@@ -88,7 +88,7 @@ metric_info['pve_memory_assigned'] = {
 #   |  Definition of Perf-O-Meters                                         |
 #   '----------------------------------------------------------------------'
 
-perfometer_info.append({
+perfometer_info.append({  # noqa: F821
     "type": "stacked",
     "perfometers": [
         {
@@ -116,8 +116,8 @@ perfometer_info.append({
 #   |  Definitions of time series graphs                                   |
 #   '----------------------------------------------------------------------'
 
-graph_info['pmg_cpu'] = {
-    'title': _('CPU Usage'),
+graph_info['pve_cpu'] = {  # noqa: F821
+    'title': _('CPU Usage'),  # noqa: F821
     'metrics': [('pve_cpu', 'area')],
     'scalars': [
         'pve_cpu:warn',
@@ -125,8 +125,8 @@ graph_info['pmg_cpu'] = {
     ],
 }
 
-graph_info['pmg_memory_current'] = {
-    'title:': _('Memory Usage'),
+graph_info['pve_memory_current'] = {  # noqa: F821
+    'title:': _('Memory Usage'),  # noqa: F821
     'metrics': [
         ('pve_memory_current', 'area'),
     ],
@@ -136,12 +136,12 @@ graph_info['pmg_memory_current'] = {
     ],
 }
 
-graph_info['pmg_memory_assigned'] = {
-    'title:': _('Assigned Memory'),
+graph_info['pve_memory_assigned'] = {  # noqa: F821
+    'title:': _('Assigned Memory'),  # noqa: F821
     'metrics': [
         ('pve_memory_assigned', 'area'),
     ],
-    'legend_scale': GB,
+    'legend_scale': 'GB',
     'legend_precision': 2,
 }
 

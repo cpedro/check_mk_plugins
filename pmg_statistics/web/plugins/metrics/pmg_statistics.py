@@ -19,7 +19,7 @@
 #   |  metrics                                                             |
 #   '----------------------------------------------------------------------'
 
-check_metrics['check_mk-pmg_statistics'] = {
+check_metrics['check_mk-pmg_statistics'] = {  # noqa: F821
     'avptime': {'name': 'pmg_avptime', },
     'bounces_in': {'name': 'pmg_bounces_in', },
     'bounces_out': {'name': 'pmg_bounces_out', },
@@ -73,110 +73,110 @@ check_metrics['check_mk-pmg_statistics'] = {
 # 52  brown 1
 # 53  brown 2
 
-metric_info['pmg_avptime'] = {
-    'title': _('Average Proccessed Time'),
+metric_info['pmg_avptime'] = {  # noqa: F821
+    'title': _('Average Proccessed Time'),  # noqa: F821
     'unit': 's',
     'color': '32/b',
 }
 
-metric_info['pmg_bytes_in'] = {
-    'title': _('Bytes In'),
+metric_info['pmg_bytes_in'] = {  # noqa: F821
+    'title': _('Bytes In'),  # noqa: F821
     'unit': 'bytes',
     'color': '33/a',
 }
 
-metric_info['pmg_bytes_out'] = {
-    'title': _('Bytes Out'),
+metric_info['pmg_bytes_out'] = {  # noqa: F821
+    'title': _('Bytes Out'),  # noqa: F821
     'unit': 'bytes',
     'color': '33/b',
 }
 
-metric_info['pmg_count'] = {
-    'title': _('Message Count'),
+metric_info['pmg_count'] = {  # noqa: F821
+    'title': _('Message Count'),  # noqa: F821
     'unit': 'count',
     'color': '41/a',
 }
 
-metric_info['pmg_count_in'] = {
-    'title': _('Messages In'),
+metric_info['pmg_count_in'] = {  # noqa: F821
+    'title': _('Messages In'),  # noqa: F821
     'unit': 'count',
     'color': '43/a',
 }
 
-metric_info['pmg_count_out'] = {
-    'title': _('Messages Out'),
+metric_info['pmg_count_out'] = {  # noqa: F821
+    'title': _('Messages Out'),  # noqa: F821
     'unit': 'count',
     'color': '43/b',
 }
 
-metric_info['pmg_pregreet_rejects'] = {
-    'title': _('Pre-Greet Rejects'),
+metric_info['pmg_pregreet_rejects'] = {  # noqa: F821
+    'title': _('Pre-Greet Rejects'),  # noqa: F821
     'unit': 'count',
     'color': '15/a',
 }
 
-metric_info['pmg_glcount'] = {
-    'title': _('Greylist Message Count'),
+metric_info['pmg_glcount'] = {  # noqa: F821
+    'title': _('Greylist Message Count'),  # noqa: F821
     'unit': 'count',
     'color': '16/a',
 }
 
-metric_info['pmg_rbl_rejects'] = {
-    'title': _('RBL Rejects'),
+metric_info['pmg_rbl_rejects'] = {  # noqa: F821
+    'title': _('RBL Rejects'),  # noqa: F821
     'unit': 'count',
     'color': '21/a',
 }
 
-metric_info['pmg_spfcount'] = {
-    'title': _('SPF Rejects'),
+metric_info['pmg_spfcount'] = {  # noqa: F821
+    'title': _('SPF Rejects'),  # noqa: F821
     'unit': 'count',
     'color': '22/a',
 }
 
-metric_info['pmg_bounces_in'] = {
-    'title': _('Bounced Messages In'),
+metric_info['pmg_bounces_in'] = {  # noqa: F821
+    'title': _('Bounced Messages In'),  # noqa: F821
     'unit': 'count',
     'color': '12/a',
 }
 
-metric_info['pmg_bounces_out'] = {
-    'title': _('Bounced Messages Out'),
+metric_info['pmg_bounces_out'] = {  # noqa: F821
+    'title': _('Bounced Messages Out'),  # noqa: F821
     'unit': 'count',
     'color': '12/b',
 }
 
-metric_info['pmg_junk_in'] = {
-    'title': _('Junk Messages In'),
+metric_info['pmg_junk_in'] = {  # noqa: F821
+    'title': _('Junk Messages In'),  # noqa: F821
     'unit': 'count',
     'color': '13/a',
 }
 
-metric_info['pmg_junk_out'] = {
-    'title': _('Junk Messages Out'),
+metric_info['pmg_junk_out'] = {  # noqa: F821
+    'title': _('Junk Messages Out'),  # noqa: F821
     'unit': 'count',
     'color': '13/b',
 }
 
-metric_info['pmg_spamcount_in'] = {
-    'title': _('Spam Messages In'),
+metric_info['pmg_spamcount_in'] = {  # noqa: F821
+    'title': _('Spam Messages In'),  # noqa: F821
     'unit': 'count',
     'color': '14/a',
 }
 
-metric_info['pmg_spamcount_out'] = {
-    'title': _('Spam Messages Out'),
+metric_info['pmg_spamcount_out'] = {  # noqa: F821
+    'title': _('Spam Messages Out'),  # noqa: F821
     'unit': 'count',
     'color': '14/b',
 }
 
-metric_info['pmg_viruscount_in'] = {
-    'title': _('Virus Messages In'),
+metric_info['pmg_viruscount_in'] = {  # noqa: F821
+    'title': _('Virus Messages In'),  # noqa: F821
     'unit': 'count',
     'color': '15/a',
 }
 
-metric_info['pmg_viruscount_out'] = {
-    'title': _('Virus Messages Out'),
+metric_info['pmg_viruscount_out'] = {  # noqa: F821
+    'title': _('Virus Messages Out'),  # noqa: F821
     'unit': 'count',
     'color': '15/b',
 }
@@ -193,7 +193,7 @@ metric_info['pmg_viruscount_out'] = {
 #   |  Definition of Perf-O-Meters                                         |
 #   '----------------------------------------------------------------------'
 
-perfometer_info.append({
+perfometer_info.append({  # noqa: F821
     'type': 'linear',
     'segments': ['pmg_avptime'],
     'total': 'pmg_avptime:warn',
@@ -211,8 +211,8 @@ perfometer_info.append({
 #   |  Definitions of time series graphs                                   |
 #   '----------------------------------------------------------------------'
 
-graph_info['pmg_avptime'] = {
-    'title': _('Average Mail Proccessed Time'),
+graph_info['pmg_avptime'] = {  # noqa: F821
+    'title': _('Average Mail Proccessed Time'),  # noqa: F821
     'metrics': [('pmg_avptime', 'area')],
     'scalars': [
         'pmg_avptime:warn',
@@ -220,16 +220,16 @@ graph_info['pmg_avptime'] = {
     ],
 }
 
-graph_info['pmg_bytes'] = {
-    'title:': _('Total Traffic'),
+graph_info['pmg_bytes'] = {  # noqa: F821
+    'title:': _('Total Traffic'),  # noqa: F821
     'metrics': [
         ('pmg_bytes_in', 'area'),
         ('pmg_bytes_out', '-area'),
     ],
 }
 
-graph_info['pmg_counts'] = {
-    'title:': _('Total Message Count'),
+graph_info['pmg_counts'] = {  # noqa: F821
+    'title:': _('Total Message Count'),  # noqa: F821
     'metrics': [
         ('pmg_count_in', 'area'),
         ('pmg_count_out', '-area'),
@@ -237,8 +237,8 @@ graph_info['pmg_counts'] = {
     ],
 }
 
-graph_info['pmg_bounces'] = {
-    'title': _('Filtering Checks'),
+graph_info['pmg_bounces'] = {  # noqa: F821
+    'title': _('Filtering Checks'),  # noqa: F821
     'metrics': [
         ('pmg_bounces_in', 'line'),
         ('pmg_bounces_out', '-line'),
@@ -251,8 +251,8 @@ graph_info['pmg_bounces'] = {
     ],
 }
 
-graph_info['pmg_prefilter_checks'] = {
-    'title': _('Pre-Filtering Checks'),
+graph_info['pmg_prefilter_checks'] = {  # noqa: F821
+    'title': _('Pre-Filtering Checks'),  # noqa: F821
     'metrics': [
         ('pmg_pregreet_rejects', 'stack'),
         ('pmg_glcount', 'stack'),
