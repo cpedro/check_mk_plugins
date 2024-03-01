@@ -44,10 +44,10 @@ def check_zpool_iostat(item, params, info):
             write_wait_warn, write_wait_crit = params['zpool_write_wait']
 
             # Convert thresholds from ms to s.
-            read_wait_warn = read_wait_warn / 1e3
-            read_wait_crit = read_wait_crit / 1e3
-            write_wait_warn = write_wait_warn / 1e3
-            write_wait_crit = write_wait_crit / 1e3
+            read_wait_warn_s = read_wait_warn / 1e3
+            read_wait_crit_s = read_wait_crit / 1e3
+            write_wait_warn_s = write_wait_warn / 1e3
+            write_wait_crit_s = write_wait_crit / 1e3
 
             # Get other values.
             pool = line[0]
@@ -71,24 +71,29 @@ def check_zpool_iostat(item, params, info):
                 ('zpool_write_iops', write_iops),
                 ('zpool_read_bw', read_bw),
                 ('zpool_write_bw', write_bw),
-                ('zpool_read_wait', read_wait, read_wait_warn, read_wait_crit),
-                ('zpool_write_wait', write_wait, write_wait_warn,
-                    write_wait_crit),
+                ('zpool_read_wait', read_wait, read_wait_warn_s,
+                    read_wait_crit_s),
+                ('zpool_write_wait', write_wait, write_wait_warn_s,
+                    write_wait_crit_s),
             ])
 
             # Check thresholds and set state.
-            if read_wait_crit is not None and read_wait > read_wait_crit:
+            if read_wait > read_wait_crit_s:
                 state = 2
-                info += f' (warn/crit at {read_wait_warn}/{read_wait_crit})'
-            elif write_wait_crit is not None and write_wait > write_wait_crit:
+                detail += (
+                    f' (warn/crit: {read_wait_warn} ms/{read_wait_crit} ms)')
+            elif write_wait > write_wait_crit_s:
                 state = 2
-                info += f' (warn/crit at {write_wait_warn}/{write_wait_crit})'
-            elif read_wait_warn is not None and read_wait > read_wait_warn:
+                detail += (
+                    f' (warn/crit: {write_wait_warn} ms/{write_wait_crit} ms)')
+            elif read_wait > read_wait_warn_s:
                 state = 1
-                info += f' (warn/crit at {read_wait_warn}/{read_wait_crit})'
-            elif write_wait_warn is not None and write_wait > write_wait_warn:
+                detail += (
+                    f' (warn/crit: {read_wait_warn} ms/{read_wait_crit} ms)')
+            elif write_wait > write_wait_warn_s:
                 state = 1
-                info += f' (warn/crit at {write_wait_warn}/{write_wait_crit})'
+                detail += (
+                    f' (warn/crit: {write_wait_warn} ms/{write_wait_crit} ms)')
 
             yield state, detail, perfdata
 
