@@ -16,7 +16,7 @@ from cmk.gui.valuespec import (
 from cmk.gui.plugins.wato import (
     CheckParameterRulespecWithoutItem,
     rulespec_registry,
-    RulespecGroupCheckParametersApplications,
+    RulespecGroupCheckParametersStorage,
 )
 
 
@@ -24,40 +24,40 @@ def _parameter_valuespec_zpool_iostat():
     return Dictionary(
         elements=[
             (
-                'read_wait', Tuple(
-                    title=_('ZFS pool read latency'),
+                'zpool_read_wait', Tuple(
+                    title=_('Read latency'),
                     elements=[
-                        Integer(title=_("Warning at"), unit=_("s"),
-                                default_value=0.01),
-                        Integer(title=_("Critical at"), unit=_("s"),
-                                default_value=0.05),
+                        Integer(title=_("Warning at"), unit=_("ms"),
+                                default_value=10),
+                        Integer(title=_("Critical at"), unit=_("ms"),
+                                default_value=50),
                     ],
                 ),
             ),
             (
-                'write_wait', Tuple(
-                    title=_('ZFS pool write latency'),
+                'zpool_write_wait', Tuple(
+                    title=_('Write latency'),
                     elements=[
-                        Integer(title=_("Warning at"), unit=_("s"),
-                                default_value=0.01),
-                        Integer(title=_("Critical at"), unit=_("s"),
-                                default_value=0.05),
+                        Integer(title=_("Warning at"), unit=_("ms"),
+                                default_value=10),
+                        Integer(title=_("Critical at"), unit=_("ms"),
+                                default_value=50),
                     ],
                 ),
             ),
         ],
-        required_keys=['read_wait', 'write_wait'],
+        required_keys=['zpool_read_wait', 'zpool_write_wait'],
     )
 
 
 rulespec_registry.register(
     CheckParameterRulespecWithoutItem(
         check_group_name='zpool_iostat',
-        group=RulespecGroupCheckParametersApplications,
+        group=RulespecGroupCheckParametersStorage,
         is_deprecated=False,
         match_type='dict',
         parameter_valuespec=_parameter_valuespec_zpool_iostat,
-        title=lambda: _('ZFS pool status'),
+        title=lambda: _('ZFS pool iostat'),
     )
 )
 

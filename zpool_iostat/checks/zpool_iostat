@@ -11,8 +11,8 @@
 
 
 factory_settings['zpool_iostat_default_levels'] = {  # noqa: F821
-    'zpool_read_wait': (0.01, 0.05),
-    'zpool_write_wait': (0.01, 0.05),
+    'zpool_read_wait': (10, 50),
+    'zpool_write_wait': (10, 50),
 }
 
 
@@ -39,9 +39,17 @@ def check_zpool_iostat(item, params, info):
             state = 0
             perfdata = []
 
+            # Get threshold values.
             read_wait_warn, read_wait_crit = params['zpool_read_wait']
             write_wait_warn, write_wait_crit = params['zpool_write_wait']
 
+            # Convert thresholds from ms to s.
+            read_wait_warn = read_wait_warn / 1e3
+            read_wait_crit = read_wait_crit / 1e3
+            write_wait_warn = write_wait_warn / 1e3
+            write_wait_crit = write_wait_crit / 1e3
+
+            # Get other values.
             pool = line[0]
             read_iops = int(line[3])
             write_iops = int(line[4])
@@ -51,11 +59,13 @@ def check_zpool_iostat(item, params, info):
             read_wait = float(line[7]) / 1e9
             write_wait = float(line[8]) / 1e9
 
+            # Build up detail.
             detail = (
                 f'{pool} - Read IOPS: {read_iops}, Write IOPS: {write_iops}, '
                 f'Read Latency = {convert_to_subsecond(read_wait)}, '
                 f'Write Latency = {convert_to_subsecond(write_wait)}')
 
+            # Set performance data.
             perfdata.extend([
                 ('zpool_read_iops', read_iops),
                 ('zpool_write_iops', write_iops),
@@ -66,6 +76,7 @@ def check_zpool_iostat(item, params, info):
                     write_wait_crit),
             ])
 
+            # Check thresholds and set state.
             if read_wait_crit is not None and read_wait > read_wait_crit:
                 state = 2
                 info += f' (warn/crit at {read_wait_warn}/{read_wait_crit})'

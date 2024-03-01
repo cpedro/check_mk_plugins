@@ -156,6 +156,8 @@ graph_info['zpool_latency'] = {  # noqa: F821
     'scalars': [
         'zpool_read_wait:warn',
         'zpool_read_wait:crit',
+        'zpool_write_wait:warn',
+        'zpool_write_wait:crit',
     ],
 }
 
