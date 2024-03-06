@@ -7,6 +7,11 @@
 # Date: 2024-02-27
 
 
+from cmk.gui.i18n import _
+from cmk.gui.plugins.metrics.utils import (
+    check_metrics, graph_info, metric_info, perfometer_info)
+
+
 #   .--Checks--------------------------------------------------------------.
 #   |                    ____ _               _                            |
 #   |                   / ___| |__   ___  ___| | _____                     |
@@ -19,7 +24,7 @@
 #   |  metrics                                                             |
 #   '----------------------------------------------------------------------'
 
-check_metrics['check_mk-zpool_iostat'] = {  # noqa: F821
+check_metrics['check_mk-zpool_iostat'] = {
     'zpool_read_iops': {'name': 'zpool_read_iops', },
     'zpool_write_iops': {'name': 'zpool_write_iops', },
     'zpool_read_wait': {'name': 'zpool_read_wait', },
@@ -61,38 +66,38 @@ check_metrics['check_mk-zpool_iostat'] = {  # noqa: F821
 # 52  brown 1
 # 53  brown 2
 
-metric_info['zpool_read_iops'] = {  # noqa: F821
-    'title': _('Read IOPS'),  # noqa: F821
+metric_info['zpool_read_iops'] = {
+    'title': _('Read IOPS'),
     'unit': '1/s',
     'color': '11/a',
 }
 
-metric_info['zpool_write_iops'] = {  # noqa: F821
-    'title': _('Write IOPS'),  # noqa: F821
+metric_info['zpool_write_iops'] = {
+    'title': _('Write IOPS'),
     'unit': '1/s',
     'color': '13/a',
 }
 
-metric_info['zpool_read_wait'] = {  # noqa: F821
-    'title': _('Read Latency'),  # noqa: F821
+metric_info['zpool_read_wait'] = {
+    'title': _('Read Latency'),
     'unit': 's',
     'color': '31/a',
 }
 
-metric_info['zpool_write_wait'] = {  # noqa: F821
-    'title': _('Write Latency'),  # noqa: F821
+metric_info['zpool_write_wait'] = {
+    'title': _('Write Latency'),
     'unit': 's',
     'color': '33/a',
 }
 
-metric_info['zpool_read_bw'] = {  # noqa: F821
-    'title': _('Read Bandwidth'),  # noqa: F821
+metric_info['zpool_read_bw'] = {
+    'title': _('Read Bandwidth'),
     'unit': 'bytes/s',
     'color': '#00e060',
 }
 
-metric_info['zpool_write_bw'] = {  # noqa: F821
-    'title': _('Write Bandwidth'),  # noqa: F821
+metric_info['zpool_write_bw'] = {
+    'title': _('Write Bandwidth'),
     'unit': 'bytes/s',
     'color': '#0080e0',
 }
@@ -109,7 +114,7 @@ metric_info['zpool_write_bw'] = {  # noqa: F821
 #   |  Definition of Perf-O-Meters                                         |
 #   '----------------------------------------------------------------------'
 
-perfometer_info.append({  # noqa: F821
+perfometer_info.append({
     "type": "dual",
     "perfometers": [
         {
@@ -139,30 +144,30 @@ perfometer_info.append({  # noqa: F821
 #   |  Definitions of time series graphs                                   |
 #   '----------------------------------------------------------------------'
 
-graph_info['zpool_iops'] = {  # noqa: F821
-    'title': _('IOPS'),  # noqa: F821
+graph_info['zpool_iops'] = {
+    'title': _('IOPS'),
     'metrics': [
         ('zpool_read_iops', 'area'),
         ('zpool_write_iops', '-area'),
     ],
 }
 
-graph_info['zpool_latency'] = {  # noqa: F821
-    'title': _('Latency'),  # noqa: F821
+graph_info['zpool_latency'] = {
+    'title': _('Latency'),
     'metrics': [
         ('zpool_read_wait', 'area'),
         ('zpool_write_wait', '-area'),
     ],
     'scalars': [
-        ('zpool_read_wait:warn', _('Warning (Read)')),  # noqa: F821
-        ('zpool_read_wait:crit', _('Critical (Read)')),  # noqa: F821
-        ('zpool_write_wait:warn,-1,*', _('Warning (Write)')),  # noqa: F821
-        ('zpool_write_wait:crit,-1,*', _('Critical (Write)')),  # noqa: F821
+        ('zpool_read_wait:warn', _('Warning (Read)')),
+        ('zpool_read_wait:crit', _('Critical (Read)')),
+        ('zpool_write_wait:warn,-1,*', _('Warning (Write)')),
+        ('zpool_write_wait:crit,-1,*', _('Critical (Write)')),
     ],
 }
 
-graph_info['zpool_bw'] = {  # noqa: F821
-    'title': _('Bandwidth'),  # noqa: F821
+graph_info['zpool_bw'] = {
+    'title': _('Bandwidth'),
     'metrics': [
         ('zpool_read_bw', 'area'),
         ('zpool_write_bw', '-area'),

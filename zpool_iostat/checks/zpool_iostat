@@ -10,7 +10,10 @@
 # tank 133596401971200 327253588889600 0 11 0 1612 0 9804 0 9830 0 800 0 0 0 0
 
 
-factory_settings['zpool_iostat_default_levels'] = {  # noqa: F821
+from cmk.base.config import check_info, factory_settings
+
+
+factory_settings['zpool_iostat_default_levels'] = {
     'zpool_read_wait': (10, 50),
     'zpool_write_wait': (10, 50),
 }
@@ -98,7 +101,7 @@ def check_zpool_iostat(item, params, info):
             yield state, detail, perfdata
 
 
-check_info['zpool_iostat'] = {  # noqa: F821
+check_info['zpool_iostat'] = {
     'inventory_function': inventory_zpool_iostat,
     'check_function': check_zpool_iostat,
     'service_description': 'ZFS pool %s iostat',
