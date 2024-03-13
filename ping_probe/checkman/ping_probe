@@ -1,0 +1,11 @@
+title: Ping Probe
+agents: linux
+catalog: os/services
+license: MIT License
+distribution: check_mk
+description:
+ Pings remote destinations from the Check_MK agent and reports back on latency,
+ packet loss, jitter and MOS score.
+
+inventory:
+ One service per probe is created

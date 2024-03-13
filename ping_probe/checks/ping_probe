@@ -1,0 +1,121 @@
+#!/usr/bin/python
+# -*- encoding: utf-8; py-indent-offset: 4 -*-
+
+# Monitor ping probe from agent.
+# Author: Chris Pedro
+# Date: 2024-03-12
+
+# Example output from agent:
+# <<<nms_net_utils_ping>>>>
+# ME_to_Internet_ICMP 9.9.9.9 icmp 0.0000 32.78 40.53 39.60 32.78 6.88 0.47 4.38
+
+
+from cmk.base.config import check_info, factory_settings
+
+
+factory_settings['ping_probe_default_levels'] = {
+    'ping_probe_loss': (10, 20),
+    'ping_probe_avg_rtt': (75, 100),
+    'ping_probe_avg_jitter': (10, 20),
+    'ping_probe_mos': (4, 3)
+}
+
+
+def inventory_ping_probe(info):
+    inventory = []
+    for line in info:
+        probe = line[0]
+        inventory.append((probe, None))
+    return inventory
+
+
+def check_ping_probe(item, params, info):
+    for line in info:
+        if item == line[0]:
+            state = 0
+            perfdata = []
+
+            # Get thresholds.
+            loss_warn, loss_crit = params['ping_probe_loss']
+            rtt_warn, rtt_crit = params['ping_probe_avg_rtt']
+            jit_warn, jit_crit = params['ping_probe_avg_jitter']
+            mos_warn, mos_crit = params['ping_probe_mos']
+
+            # Convert thresholds from ms to s.
+            rtt_warn_s = rtt_warn / 1e3
+            rtt_crit_s = rtt_crit / 1e3
+            jit_warn_s = jit_warn / 1e3
+            jit_crit_s = jit_crit / 1e3
+
+            # Get other values.
+            (probe, dest, ping_type, loss, min_rtt, max_rtt, avg_rtt,
+                min_jit, max_jit, avg_jit, mos_score) = line[:11]
+
+            # Do necessary conversions.
+            loss = float(loss) * 100
+            min_rtt = float(min_rtt) / 1e3
+            max_rtt = float(max_rtt) / 1e3
+            avg_rtt = float(avg_rtt) / 1e3
+            min_jit = float(min_jit) / 1e3
+            max_jit = float(max_jit) / 1e3
+            avg_jit = float(avg_jit) / 1e3
+            mos_score = float(mos_score)
+
+            # Build up detail.
+            detail = (
+                f'{ping_type.upper()} to {dest} - '
+                f'Packet Loss: {loss:.2}%, '
+                f'Avg Latency: {(avg_rtt * 1e3)} ms, '
+                f'Avg Jitter: {(avg_jit * 1e3)} ms, '
+                f'MOS Score: {mos_score:.2}')
+
+            # Set performance data.
+            perfdata.extend([
+                ('ping_probe_loss', loss, loss_warn, loss_crit),
+                ('ping_probe_min_rtt', min_rtt),
+                ('ping_probe_max_rtt', max_rtt),
+                ('ping_probe_avg_rtt', avg_rtt, rtt_warn_s, rtt_crit_s),
+                ('ping_probe_min_jitter', min_jit),
+                ('ping_probe_max_jitter', max_jit),
+                ('ping_probe_avg_jitter', avg_jit, jit_warn_s, jit_crit_s),
+                ('ping_probe_mos', mos_score, mos_warn, mos_crit)
+            ])
+
+            # Check thresholds and set state.
+            if mos_score < mos_crit:
+                state = 2
+                detail += f' (warn/crit: {mos_warn}/{mos_crit})'
+            elif loss > loss_crit:
+                state = 2
+                detail += f' (warn/crit: {loss_warn}%/{loss_crit}%)'
+            elif avg_rtt > rtt_crit_s:
+                state = 2
+                detail += f' (warn/crit: {jit_warn} ms/{jit_crit} ms)'
+            elif avg_jit > jit_crit_s:
+                state = 2
+                detail += f' (warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
+            elif mos_score < mos_warn:
+                state = 1
+                detail += f' (warn/crit: {mos_warn}/{mos_crit})'
+            elif loss > loss_warn:
+                state = 1
+                detail += f' (warn/crit: {loss_warn}/{loss_crit})'
+            elif avg_rtt > rtt_warn_s:
+                state = 1
+                detail += f' (warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
+            elif avg_jit > jit_warn_s:
+                state = 1
+                detail += f' (warn/crit: {jit_warn} ms/{jit_crit} ms)'
+
+            yield state, detail, perfdata
+
+
+check_info['ping_probe'] = {
+    'inventory_function': inventory_ping_probe,
+    'check_function': check_ping_probe,
+    'service_description': 'Ping Probe %s',
+    'group': 'ping_probe',
+    'default_levels_variable': 'ping_probe_default_levels',
+    'has_perfdata': True,
+}
+
