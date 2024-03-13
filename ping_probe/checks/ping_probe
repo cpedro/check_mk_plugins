@@ -16,7 +16,7 @@ from cmk.base.config import check_info, factory_settings
 factory_settings['ping_probe_default_levels'] = {
     'ping_probe_loss': (10, 20),
     'ping_probe_avg_rtt': (75, 100),
-    'ping_probe_avg_jitter': (10, 20),
+    'ping_probe_avg_jitter': (20, 30),
     'ping_probe_mos': (4, 3)
 }
 
@@ -64,10 +64,10 @@ def check_ping_probe(item, params, info):
             # Build up detail.
             detail = (
                 f'{ping_type.upper()} to {dest} - '
+                f'MOS Score: {mos_score:.2}, '
                 f'Packet Loss: {loss:.2}%, '
                 f'Avg Latency: {(avg_rtt * 1e3)} ms, '
-                f'Avg Jitter: {(avg_jit * 1e3)} ms, '
-                f'MOS Score: {mos_score:.2}')
+                f'Avg Jitter: {(avg_jit * 1e3)} ms')
 
             # Set performance data.
             perfdata.extend([
@@ -84,28 +84,28 @@ def check_ping_probe(item, params, info):
             # Check thresholds and set state.
             if mos_score < mos_crit:
                 state = 2
-                detail += f' (warn/crit: {mos_warn}/{mos_crit})'
+                detail += f' (MOS warn/crit: {mos_warn}/{mos_crit})'
             elif loss > loss_crit:
                 state = 2
-                detail += f' (warn/crit: {loss_warn}%/{loss_crit}%)'
+                detail += f' (loss warn/crit: {loss_warn}%/{loss_crit}%)'
             elif avg_rtt > rtt_crit_s:
                 state = 2
-                detail += f' (warn/crit: {jit_warn} ms/{jit_crit} ms)'
+                detail += f' (latency warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
             elif avg_jit > jit_crit_s:
                 state = 2
-                detail += f' (warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
+                detail += f' (jitter warn/crit: {jit_warn} ms/{jit_crit} ms)'
             elif mos_score < mos_warn:
                 state = 1
-                detail += f' (warn/crit: {mos_warn}/{mos_crit})'
+                detail += f' (MOS warn/crit: {mos_warn}/{mos_crit})'
             elif loss > loss_warn:
                 state = 1
-                detail += f' (warn/crit: {loss_warn}/{loss_crit})'
+                detail += f' (loss warn/crit: {loss_warn}/{loss_crit})'
             elif avg_rtt > rtt_warn_s:
                 state = 1
-                detail += f' (warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
+                detail += f' (latency warn/crit: {rtt_warn} ms/{rtt_crit} ms)'
             elif avg_jit > jit_warn_s:
                 state = 1
-                detail += f' (warn/crit: {jit_warn} ms/{jit_crit} ms)'
+                detail += f' (jitter warn/crit: {jit_warn} ms/{jit_crit} ms)'
 
             yield state, detail, perfdata
 

@@ -50,9 +50,9 @@ def _parameter_valuespec_ping_probe():
                     title=_('Average Jitter'),
                     elements=[
                         Integer(title=_("Warning at"), unit=_("ms"),
-                                default_value=10),
-                        Integer(title=_("Critical at"), unit=_("ms"),
                                 default_value=20),
+                        Integer(title=_("Critical at"), unit=_("ms"),
+                                default_value=30),
                     ],
                 ),
             ),

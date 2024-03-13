@@ -68,6 +68,12 @@ check_metrics['check_mk-ping_probe'] = {
 # 52  brown 1
 # 53  brown 2
 
+metric_info['ping_probe_mos'] = {
+    'title': _('MOS Score'),
+    'unit': '',
+    'color': '22/a',
+}
+
 metric_info['ping_probe_loss'] = {
     'title': _('Packet Loss'),
     'unit': '%',
@@ -110,12 +116,6 @@ metric_info['ping_probe_avg_jitter'] = {
     'color': '32/b',
 }
 
-metric_info['ping_probe_mos'] = {
-    'title': _('MOS Score'),
-    'unit': '',
-    'color': '22/a',
-}
-
 
 #   .--Perf-O-Meters-------------------------------------------------------.
 #   |  ____            __        ___        __  __      _                  |
@@ -147,6 +147,17 @@ perfometer_info.append(
 #   +----------------------------------------------------------------------+
 #   |  Definitions of time series graphs                                   |
 #   '----------------------------------------------------------------------'
+
+graph_info['ping_probe_mos'] = {
+    'title': _('MOS Score'),
+    'metrics': [
+        ('ping_probe_mos', 'area'),
+    ],
+    'scalars': [
+        'ping_probe_mos:warn',
+        'ping_probe_mos:crit',
+    ],
+}
 
 graph_info['ping_probe_loss'] = {
     'title': _('Packet Loss'),
@@ -182,17 +193,6 @@ graph_info['ping_probe_jitter'] = {
     'scalars': [
         'ping_probe_avg_jitter:warn',
         'ping_probe_avg_jitter:crit',
-    ],
-}
-
-graph_info['ping_probe_mos'] = {
-    'title': _('MOS Score'),
-    'metrics': [
-        ('ping_probe_mos', 'area'),
-    ],
-    'scalars': [
-        'ping_probe_mos:warn',
-        'ping_probe_mos:crit',
     ],
 }
 
