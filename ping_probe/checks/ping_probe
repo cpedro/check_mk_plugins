@@ -17,7 +17,7 @@ factory_settings['ping_probe_default_levels'] = {
     'ping_probe_loss': (10, 20),
     'ping_probe_avg_rtt': (75, 100),
     'ping_probe_avg_jitter': (20, 30),
-    'ping_probe_mos': (4, 3)
+    'ping_probe_mos': (4.0, 3.0)
 }
 
 

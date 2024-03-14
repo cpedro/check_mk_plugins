@@ -10,6 +10,7 @@
 from cmk.gui.i18n import _
 from cmk.gui.valuespec import (
     Dictionary,
+    Float,
     Integer,
     Tuple,
 )
@@ -60,10 +61,10 @@ def _parameter_valuespec_ping_probe():
                 'ping_probe_mos', Tuple(
                     title=_('MOS Score'),
                     elements=[
-                        Integer(title=_("Warning at"), unit=_(""),
-                                default_value=4),
-                        Integer(title=_("Critical at"), unit=_(""),
-                                default_value=3),
+                        Float(title=_("Warning at"), unit=_(""),
+                              default_value=4.0),
+                        Float(title=_("Critical at"), unit=_(""),
+                              default_value=3.0),
                     ],
                 ),
             ),
